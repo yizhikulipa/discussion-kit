@@ -1,63 +1,21 @@
-import { defineForumConfig } from './src/lib/config/schema';
+import { describe, expect, it } from 'vitest';
+import forumConfig from '../forum.config.js';
+import { resolveConfig } from '../src/lib/config/resolve';
 
-export default defineForumConfig({
-	// ===== 网站基本信息 =====
-	site: {
-		name: '我的论坛',
-		description: '一个由GitHub Discussions驱动的社区论坛',
-		footer: 'Powered by GitHub Discussions'
-	},
+describe('resolved config', () => {
+  it('merges the root forum.config.ts over defaults', () => {
+    expect(forumConfig.repo.owner).toBe('yizhikulipa');
+    expect(forumConfig.repo.name).toBe('discussion-kit');
+    expect(forumConfig.site.name).toBe('我的论坛');
+  });
 
-	// ===== 仓库信息（必须填！） =====
-	repo: {
-		owner: 'yizhikulipa',
-		name: 'discussion-kit'
-	},
+  it('is not incomplete when a repo is configured', () => {
+    const config = resolveConfig();
+    const incomplete = !config.repo.owner || !config.repo.name;
+    expect(incomplete).toBe(false);
+  });
 
-	// ===== 顶部导航栏额外链接 =====
-	nav: [],
-
-	// ===== 🔑 登录配置（只保留 Token 登录） =====
-	auth: {
-		allowToken: true
-	},
-
-	// ===== 管理员 =====
-	admins: {
-		logins: ['yizhikulipa'],
-		badgeLabel: '管理员'
-	},
-
-	// ===== 自定义徽章 =====
-	badges: {},
-
-	// ===== 内容设置 =====
-	content: {
-		pageSize: 25,
-		sort: 'CREATED_AT',
-		articles: { enabled: true },
-		topics: {
-			include: [],
-			exclude: [],
-			restricted: ['announcements']
-		}
-	},
-
-	// ===== 功能开关 =====
-	features: {
-		search: true,
-		reactions: true,
-		upvotes: true
-	},
-
-	// ===== 只读归档 =====
-	archive: {
-		enabled: true
-	},
-
-	// ===== 主题颜色 =====
-	theme: {
-		light: {},
-		dark: {}
-	}
+  it('compiles theme overrides (none in the root config)', () => {
+    expect(forumConfig.theme).toBeDefined();
+  });
 });
