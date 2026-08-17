@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import forumConfig from '../forum.config.js';
-import { resolveConfig } from '../src/lib/config/resolve';
+import { resolveConfig } from '../src/lib/config/resolve.js';
 
 describe('resolved config', () => {
   it('merges the root forum.config.ts over defaults', () => {
@@ -10,8 +10,8 @@ describe('resolved config', () => {
   });
 
   it('is not incomplete when a repo is configured', () => {
-    const config = resolveConfig();
-    const incomplete = !config.repo.owner || !config.repo.name;
+    const config = resolveConfig(forumConfig);
+    const incomplete = !config.repo?.owner || !config.repo?.name;
     expect(incomplete).toBe(false);
   });
 
