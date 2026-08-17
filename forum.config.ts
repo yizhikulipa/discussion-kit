@@ -2,100 +2,81 @@ import { defineForumConfig } from './src/lib/config/schema';
 
 /**
  * ─────────────────────────────────────────────────────────────────────────────
- *  Discussion Kit configuration
+ *  Discussion Kit 配置
  * ─────────────────────────────────────────────────────────────────────────────
- *  Every option is optional — anything you omit falls back to a sensible
- *  default (see src/lib/config/schema.ts for the full schema and defaults).
- *
- *  Quick start for your own forum:
- *    1. Enable Discussions on your repository and create some categories.
- *    2. Set `site` to your branding.
- *    3. Either set `repo.owner` / `repo.name`, or delete them — when built by
- *       the included GitHub Actions workflow they are auto-detected, so a fork
- *       can deploy without touching any code.
- *    4. Optionally list admin logins below.
+ *  所有选项都是可选的，不填则使用默认值。
+ *  只需要改下面几项就可以了。
  */
 export default defineForumConfig({
+	// ===== 网站基本信息 =====
 	site: {
-		name: 'Discussion Kit',
-		description: 'A community forum powered by GitHub Discussions',
-		// logo: '💬',                        // emoji shown instead of the default icon
+		name: '我的论坛',              // 论坛名字，改成你喜欢的
+		description: '一个由GitHub Discussions驱动的社区论坛',
 		footer: 'Powered by GitHub Discussions'
 	},
 
-	repo: {
-		// Omit owner/name to auto-detect when building in GitHub Actions.
-		owner: 'NotReeceHarris',
-		name: 'discussion-kit'
-	},
+	// ===== 仓库信息（自动检测，不用改） =====
+	// repo: {
+	//   owner: 'yizhikulipa',
+	//   name: 'discussion-kit'
+	// },
 
-	// Extra header links
+	// ===== 顶部导航栏额外链接 =====
 	nav: [
-		// { label: 'Docs', href: 'https://example.com/docs', external: true }
+		// 想加就取消注释，比如：
+		// { label: '关于', href: 'https://example.com/about', external: true }
 	],
 
+	// ===== 🔑 登录配置（只保留 Token 登录） =====
 	auth: {
-		allowToken: true,
-		oauth: {
-			// Fill both to enable the "Continue with GitHub" button (see README):
-			clientId: 'Ov23li1QctsLGHqbcIwq',
-			proxyUrl: 'https://discussion-kit-oauth.reeceharris.workers.dev'
-		}
+		allowToken: true
+		// OAuth 已完全移除，不会显示 "继续使用 GitHub" 按钮
 	},
 
+	// ===== 管理员 =====
 	admins: {
-		logins: ['NotReeceHarris'], // GitHub logins that get the admin badge
-		badgeLabel: 'Admin'  // label shown next to admin usernames
+		logins: ['yizhikulipa'],    // 改成你的 GitHub 用户名
+		badgeLabel: '管理员'
 	},
 
-	// Custom badges shown next to usernames: label → GitHub logins
+	// ===== 自定义徽章 =====
 	badges: {
-		'Moderator': ['NotDevenBriers'],
-		// 'Contributor': ['someuser', 'anotheruser']
+		// '版主': ['someone']
 	},
 
+	// ===== 内容设置 =====
 	content: {
 		pageSize: 25,
-		sort: 'CREATED_AT',         // or 'UPDATED_AT'
+		sort: 'CREATED_AT',
 		articles: { enabled: true },
 		topics: {
-			include: [],              // only these category slugs (empty = all)
-			exclude: [],              // hide these category slugs
-			restricted: ['announcements'] // announcement-format slugs: only maintainers can post
+			include: [],
+			exclude: [],
+			restricted: ['announcements']
 		}
 	},
 
+	// ===== 功能开关 =====
 	features: {
 		search: true,
 		reactions: true,
 		upvotes: true
 	},
 
-	// Optional reputation system: users earn rep for activity, topics can
-	// require a minimum rep to post. The rep.yml workflow maintains the
-	// ledger (rep-data branch) and reactively moderates posts made directly
-	// on github.com. Uncomment to enable:
-	rep: {
-		enabled: true,
-		gains: { post: 5, comment: 2, answerAccepted: 15 },
-		dailyCaps: { post: 25, comment: 10 },      // rep per UTC day, 0 = uncapped
-		topics: { showcase: 50 },                  // slug → min rep to post
-		onViolation: 'move',                       // 'move' | 'lock' | 'delete'
-		fallbackTopic: 'general'                   // where moved posts land
-	},
+	// ===== 声望系统（默认关闭，不用管） =====
+	// rep: {
+	// 	enabled: false,
+	// },
 
-	// Cold-store archive: the data-sync workflow snapshots the forum to the
-	// `data` branch, and signed-out visitors browse it read-only instead of
-	// hitting the (auth-only) GitHub API. Public repositories only.
+	// ===== 只读归档（开启后未登录用户可浏览） =====
 	archive: {
 		enabled: true
 	},
 
-	// Override any CSS token per scheme, e.g. a blue primary:
+	// ===== 主题颜色（可自定义） =====
 	theme: {
 		light: {
 			// primary: 'hsl(221 83% 53%)',
-			// primaryForeground: 'hsl(0 0% 100%)'
 		},
 		dark: {
 			// primary: 'hsl(217 91% 60%)'
